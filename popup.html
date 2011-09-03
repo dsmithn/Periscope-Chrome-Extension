@@ -1,0 +1,160 @@
+<style>
+body {
+  min-width:357px;
+  overflow-x:hidden;
+  font-size: small;
+  font-family: Trebuchet MS, monospace;
+}
+
+.top {
+	width: 100%;
+	float: right;
+	height: 80px;
+	background: url('logo.png');
+	background-repeat: no-repeat;
+}
+
+.buttons-top {
+	margin-top: 20px;
+	float: right;
+}
+
+.buttons-top .btn-std {
+	float: right;
+	background: url('btn.gif');
+	cursor: pointer;
+}
+
+.center {
+	float: left;
+}
+
+.center .btn-std {
+	float: left;
+	background: url('btn.gif');
+	cursor: pointer;
+}
+
+.form {
+
+}
+
+.left-form {
+	float: left;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.right-form {
+	float: right;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+
+.bottom {
+
+}
+
+.bottom .br-links{
+	float: right;
+	padding-top: 90px;
+	padding-bottom: 15px;
+}
+
+</style>
+
+<script>
+
+	function init() {
+		document.getElementById('searchterm').value = localStorage['savedTerm'];
+	}
+
+	function ahoy() {
+		if(document.getElementById('searchterm').value == '') return;
+		if(document.getElementById('searchAll').checked) {
+			chrome.tabs.getAllInWindow(null, searchAll);
+			} else {
+			chrome.tabs.executeScript(null, 
+			{file:"ps_js.js"});
+
+			chrome.tabs.getSelected(null, function(tab) {
+				chrome.tabs.sendRequest(tab.id, {terms: getTerms()}, function(response) {
+				});
+			});
+		}
+	}
+	var searchAll = function(tabs) {
+		for(var i = 0; i < tabs.length; i++) {
+			chrome.tabs.executeScript(tabs[i].id, 
+			{file:"ps_js.js"});
+			chrome.tabs.sendRequest(tabs[i].id, {terms: getTerms()}, function(response) {
+			});
+
+		}
+	}
+
+	var getTerms = function() {
+		var term = document.getElementById('searchterm').value;
+		if(document.getElementById('savesearch').checked) {
+			localStorage['savedTerm'] = term;
+			} else {
+			localStorage['savedTerm'] = '';
+		}
+		return term;
+	}
+
+</script>
+
+<body onload="init()">
+
+	<div class="top">
+		<div class="buttons-top">
+			<div class="btn-std" style="width: 80px; margin-left: auto; margin-right: auto;" onclick="window.location='#'">
+				<div class="rndd-alert-content">
+					<div class="rndd-alert-top"></div>
+					Results
+				</div>
+				<div class="rndd-alert-bottom"><div></div></div>
+			</div>
+			<div class="btn-std" style="width: 80px; margin-left: auto; margin-right: auto;" onclick="window.location='#'">
+				<div class="rndd-alert-content">
+					<div class="rndd-alert-top"></div>
+					Search
+				</div>
+				<div class="rndd-alert-bottom"><div></div></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="center">
+		<form class='main-form'>
+			<div class="left-form">
+				Search Term<br/>
+				<input type="text" id="searchterm" value=''/>
+				<br />
+				<input type="checkbox" name="savesearch" id="savesearch" checked="checked"/>Save Search
+				<br/>
+				<div class="btn-std" style="width: 80px; margin-left: auto; margin-right: auto;" onclick="javascript:ahoy();">
+					<div class="rndd-alert-content">
+						<div class="rndd-alert-top"></div>
+						Ahoy!
+					</div>
+					<div class="rndd-alert-bottom"><div></div></div>
+				</div>
+			</div>
+			<div class="right-form">
+				Scope<br/>
+				<input type="radio" name="scope" id="seachThis" checked="checked" />Current Site<br />
+				<input type="radio" name="scope" id="searchAll" />All Sites<br />
+			</div>
+		</form>
+	</div>
+
+	<div class="bottom">
+		<div class="br-links">
+			<a href="#">Options</a> | <a href="#">Close</a>
+		</div>
+	</div>
+
+</body>
