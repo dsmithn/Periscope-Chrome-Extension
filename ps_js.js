@@ -1,8 +1,6 @@
-chrome.extension.onRequest.addListener(
-		function(request, sender, sendResponse) {
-			search(request.terms);
-			sendResponse({}); // snub them.
-		});
+chrome.extension.sendRequest({'getTerms': true}, function(response) {
+	search(response.terms);
+});
 
 
 function search(terms) {

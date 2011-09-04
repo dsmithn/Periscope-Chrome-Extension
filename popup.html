@@ -79,7 +79,7 @@ body {
 			{file:"ps_js.js"});
 
 			chrome.tabs.getSelected(null, function(tab) {
-				chrome.tabs.sendRequest(tab.id, {terms: getTerms()}, function(response) {
+				chrome.tabs.sendRequest(tab.id, {'terms': getTerms()}, function(response) {
 				});
 			});
 		}
@@ -88,7 +88,7 @@ body {
 		for(var i = 0; i < tabs.length; i++) {
 			chrome.tabs.executeScript(tabs[i].id, 
 			{file:"ps_js.js"});
-			chrome.tabs.sendRequest(tabs[i].id, {terms: getTerms()}, function(response) {
+			chrome.tabs.sendRequest(tabs[i].id, {'terms': getTerms()}, function(response) {
 			});
 
 		}

@@ -9,6 +9,12 @@
   },
   "permissions": [
     "tabs", "http://*/*", "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["ps_js.js"]
+    }
   ]
 }
 
