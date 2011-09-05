@@ -1,6 +1,66 @@
+<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
 <script>
-chrome.extension.onRequest.addListener(
-		function(request, sender, sendResponse) {
-			sendResponse({'terms': localStorage['savedTerm']});
-		});
+	chrome.extension.onRequest.addListener(
+	function(request, sender, sendResponse) {
+		console.log(request);
+		if(request.searchBody) {
+			if(localStorage['savedTerm'] == '') {
+				sendResponse({'success':false});
+			}
+			var html = search(request.html);
+			sendResponse({'html':html, 'success':true});
+
+		}
+		else {
+			localStorage[sender.tab.id] = {};
+			localStorage[sender.tab.id].results = request.results;
+			sendResponse({'done':true});
+		}
+	});
+
+function search(html) {
+	var terms = localStorage['savedTerm'];
+	var term = terms.toLowerCase();
+	var matches = {};
+	
+	allTerms = term.split(',');
+
+	var tempBody = html;
+
+	for(var n = 0; n < allTerms.length; n++) {
+		console.log(term);
+		var newText = "";
+		var i = -1;
+		var bodyText = tempBody;
+		var lcBodyText = tempBody.toLowerCase();
+		var fCount = 0;
+		term = allTerms[n];
+
+		matches.term = {};
+		matches.term.results = [];
+
+		while (bodyText.length > 0) {
+			i = lcBodyText.indexOf(term, i+1);
+			if (i < 0) {
+				newText += bodyText;
+				bodyText = "";
+			} else {
+				if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
+					if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf("<script", i)) {
+						fCount++;
+						var highlightStartTag = "<font style='color:blue; background-color:yellow;' name='periscopeItem_"+fCount+"'>";
+						var highlightEndTag = "</font>";
+						matches.term.results.push('periscopeItem_'+fCount);
+						newText += bodyText.substring(0, i) + highlightStartTag + bodyText.substr(i, term.length) + highlightEndTag;
+						bodyText = bodyText.substr(i + term.length);
+						lcBodyText = bodyText.toLowerCase();
+						i = -1;
+					}
+				}
+			}
+		}
+		tempBody = newText;
+	}
+	return newText;
+}
 </script>
