@@ -2,13 +2,13 @@
 <script>
 	chrome.extension.onRequest.addListener(
 	function(request, sender, sendResponse) {
-		console.log(request);
 		if(request.searchBody) {
 			if(localStorage['savedTerm'] == '') {
 				sendResponse({'success':false});
 			}
-			var html = search(request.html);
-			sendResponse({'html':html, 'success':true});
+			var searchResults = search(request.html);
+			chrome.browserAction.setBadgeText({'text':searchResults.totalCount.toString(),'tabId':parseInt(sender.tab.id)});
+			sendResponse({'html':searchResults.html, 'terms': searchResults.terms, 'success':true});
 
 		}
 		else {
@@ -26,6 +26,8 @@ function search(html) {
 	allTerms = term.split(',');
 
 	var tempBody = html;
+
+	var totalCount = 0;
 
 	for(var n = 0; n < allTerms.length; n++) {
 		console.log(term);
@@ -48,6 +50,7 @@ function search(html) {
 				if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
 					if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf("<script", i)) {
 						fCount++;
+						totalCount++;
 						var highlightStartTag = "<font style='color:blue; background-color:yellow;' name='periscopeItem_"+fCount+"'>";
 						var highlightEndTag = "</font>";
 						matches.term.results.push('periscopeItem_'+fCount);
@@ -61,6 +64,6 @@ function search(html) {
 		}
 		tempBody = newText;
 	}
-	return newText;
+	return {'html': newText, 'terms':terms.toLowerCase(), 'totalCount':totalCount};
 }
 </script>
