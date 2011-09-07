@@ -1,6 +1,6 @@
 <style>
 body {
-  min-width:357px;
+  min-width:325px;
   overflow-x:hidden;
   font-size: small;
   font-family: Trebuchet MS, monospace;
@@ -9,19 +9,20 @@ body {
 .top {
 	width: 100%;
 	float: right;
-	height: 80px;
+	height: 50px;
 	background: url('logo.png');
 	background-repeat: no-repeat;
 }
 
 .buttons-top {
-	margin-top: 20px;
+	margin-top: 10px;
 	float: right;
 }
 
 .buttons-top .btn-std {
 	float: right;
-	background: url('btn.gif');
+	background: url('button.png');
+	background-repeat: no-repeat;
 	cursor: pointer;
 }
 
@@ -31,7 +32,8 @@ body {
 
 .center .btn-std {
 	float: left;
-	background: url('btn.gif');
+	background: url('button.png');
+	background-repeat: no-repeat; 
 	cursor: pointer;
 }
 
@@ -58,8 +60,8 @@ body {
 
 .bottom .br-links{
 	float: right;
-	padding-top: 90px;
-	padding-bottom: 15px;
+	padding-top: 5px;
+	padding-bottom: 20px;
 }
 
 </style>
@@ -110,14 +112,14 @@ body {
 
 	<div class="top">
 		<div class="buttons-top">
-			<div class="btn-std" style="width: 80px; margin-left: auto; margin-right: auto;" onclick="window.location='./results.html'">
+			<div class="btn-std" style="width: 60px; margin-left: auto; margin-right: auto;" onclick="window.location='./results.html'">
 				<div class="rndd-alert-content">
 					<div class="rndd-alert-top"></div>
 					Results
 				</div>
 				<div class="rndd-alert-bottom"><div></div></div>
 			</div>
-			<div class="btn-std" style="width: 80px; margin-left: auto; margin-right: auto;" onclick="window.location='./popup.html'">
+			<div class="btn-std" style="width: 60px; margin-left: auto; margin-right: auto;" onclick="window.location='./popup.html'">
 				<div class="rndd-alert-content">
 					<div class="rndd-alert-top"></div>
 					Search
@@ -130,7 +132,7 @@ body {
 	<div class="center">
 		<form class='main-form'>
 			<div class="left-form">
-				Search Term<br/>
+				<b>Search Term</b><br/>
 				<input type="text" id="searchterm" value=''/>
 				<br />
 				<input type="checkbox" name="savesearch" id="savesearch" checked="checked"/>Save Search
@@ -144,7 +146,7 @@ body {
 				</div>
 			</div>
 			<div class="right-form">
-				Scope<br/>
+				<b>Scope</b><br/>
 				<input type="radio" name="scope" id="seachThis" checked="checked" />Current Site<br />
 				<input type="radio" name="scope" id="searchAll" />All Sites<br />
 			</div>
