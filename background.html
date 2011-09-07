@@ -6,6 +6,7 @@
 			if(localStorage['savedTerm'] == '') {
 				sendResponse({'success':false});
 			}
+			jqueryParse(request.html);
 			var searchResults = search(request.html);
 			chrome.browserAction.setBadgeText({'text':searchResults.totalCount.toString(),'tabId':parseInt(sender.tab.id)});
 			sendResponse({'html':searchResults.html, 'terms': searchResults.terms, 'success':true});
@@ -66,4 +67,28 @@ function search(html) {
 	}
 	return {'html': newText, 'terms':terms.toLowerCase(), 'totalCount':totalCount};
 }
+
+function jqueryParse(html) {
+
+	var terms = localStorage['savedTerm'];
+	var term = terms.toLowerCase();
+	var matches = {};
+	var totalCount = 0;
+	var allTerms = term.split(',');
+
+	var cont = document.getElementById('container');
+	cont.innerHTML = html;
+
+	for(var n = 0; n < allTerms.length; n++) {
+
+		$(function() {
+			console.log(allTerms[n]);
+			var foundin = $('*:contains("'+allTerms[n]+'")');
+			console.log(foundin.length);
+		});
+	}
+}
 </script>
+<body>
+	<div id='container'></div>
+</body>
