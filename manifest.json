@@ -1,20 +1,26 @@
 {
-  "name": "Periscope",
+  "manifest_version": 2,
+
+  "name": "Periscope Chrome Extension",
+  "description": "Search once, search everywhere.",
   "version": "1.0",
-  "description": "Search one, everywhere.",
-  "background_page": "background.html",
+
   "browser_action": {
     "default_icon": "icon.png",
-    "popup": "popup.html"
+    "default_popup": "popup.html"
   },
-  "permissions": [
-    "tabs", "http://*/*", "https://*/*"
-  ],
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["ps_js.js"]
+      "matches": ["<all_urls>"],
+      "js": ["ps.js"],
+      "run_at": "document_end"
     }
+  ],
+  "background": {
+    "persistent": false,
+    "page": "popup.html"
+  },
+  "permissions": [
+    "tabs", "storage", "http://*/*"
   ]
 }
-

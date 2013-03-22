@@ -1,170 +1,42 @@
-<style>
-body {
-  min-width:325px;
-  overflow-x:hidden;
-  font-size: small;
-  font-family: Trebuchet MS, monospace;
-}
-
-.top {
-	width: 100%;
-	float: right;
-	height: 50px;
-	background: url('logo.png');
-	background-repeat: no-repeat;
-}
-
-.btn-std {
-	text-align: center;
-	width: 60px; 
-	height: 20px;
-	margin-left: auto; 
-	margin-right: auto;
-}
-
-.buttons-top {
-	margin-top: 5px;
-	float: right;
-}
-
-.buttons-top .btn-std {
-	float: right;
-	background: url('button.png');
-	background-repeat: no-repeat;
-	cursor: pointer;
-}
-
-.center {
-	float: left;
-}
-
-.center .btn-std {
-	float: left;
-	background: url('button.png');
-	background-repeat: no-repeat; 
-	cursor: pointer;
-}
-
-.form {
-
-}
-
-.left-form {
-	float: left;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.right-form {
-	float: right;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: left;
-}
-
-.bottom {
-
-}
-
-.bottom .br-links{
-	float: right;
-	padding-top: 5px;
-	padding-bottom: 20px;
-}
-
-</style>
-
-<script>
-
-	function init() {
-		document.getElementById('searchterm').value = localStorage['savedTerm'];
+<!doctype html>
+<html>
+<head>
+	<title>Getting Started Extension's Popup</title>
+	<style>
+	body {
+		min-width: 357px;
+		overflow-x: hidden;
 	}
+	</style>
 
-	function ahoy() {
-		if(document.getElementById('searchterm').value == '') return;
-		if(document.getElementById('searchAll').checked) {
-			chrome.tabs.getAllInWindow(null, searchAll);
-			} else {
-			chrome.tabs.executeScript(null, 
-			{file:"ps_js.js"});
-
-			chrome.tabs.getSelected(null, function(tab) {
-				chrome.tabs.sendRequest(tab.id, {'terms': getTerms()}, function(response) {
-				});
-			});
-		}
-	}
-	var searchAll = function(tabs) {
-		for(var i = 0; i < tabs.length; i++) {
-			chrome.tabs.executeScript(tabs[i].id, 
-			{file:"ps_js.js"});
-			chrome.tabs.sendRequest(tabs[i].id, {'terms': getTerms()}, function(response) {
-			});
-
-		}
-	}
-
-	var getTerms = function() {
-		var term = document.getElementById('searchterm').value;
-		if(document.getElementById('savesearch').checked) {
-			localStorage['savedTerm'] = term;
-			} else {
-			localStorage['savedTerm'] = '';
-		}
-		return term;
-	}
-
-</script>
-
-<body onload="init()">
-
-	<div class="top">
-		<div class="buttons-top">
-			<div class="btn-std" onclick="window.location='./results.html'">
-				<div class="rndd-alert-content">
-					<div class="rndd-alert-top"></div>
-					Results
-				</div>
-				<div class="rndd-alert-bottom"><div></div></div>
-			</div>
-			<div class="btn-std" onclick="window.location='./popup.html'">
-				<div class="rndd-alert-content">
-					<div class="rndd-alert-top"></div>
-					Search
-				</div>
-				<div class="rndd-alert-bottom"><div></div></div>
-			</div>
-		</div>
-	</div>
-
-	<div class="center">
-		<form class='main-form'>
-			<div class="left-form">
-				<b>Search Term</b><br/>
-				<input type="text" id="searchterm" value=''/>
-				<br />
-				<input type="checkbox" name="savesearch" id="savesearch" checked="checked"/>Save Search
-				<br/>
-				<div class="btn-std" onclick="javascript:ahoy();">
-					<div class="rndd-alert-content">
-						<div class="rndd-alert-top"></div>
-						Ahoy!
-					</div>
-					<div class="rndd-alert-bottom"><div></div></div>
-				</div>
-			</div>
-			<div class="right-form">
-				<b>Scope</b><br/>
-				<input type="radio" name="scope" id="seachThis" checked="checked" />Current Site<br />
-				<input type="radio" name="scope" id="searchAll" />All Sites<br />
-			</div>
-		</form>
-	</div>
-
-	<div class="bottom">
-		<div class="br-links">
-			<a href="#">Options</a> | <a href="#">Close</a>
-		</div>
-	</div>
-
-</body>
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+    -->
+    <script src="ps_background.js"></script>
+  </head>
+  <body>
+  	<h2>Periscope Chrome Extension</h2>
+  	<label for="search">Search Term</label>
+  	<input type="text" id="search" name="search" />
+  	<br />
+  	<br />
+  	<input type="button" value="Save" id="saveSearch"/>
+  	<table border="1">
+  		<tr>
+  			<td>term one</td>
+  			<td><a href="#">delete</a></td>
+  		</tr>
+  		<tr>
+  			<td>term two</td>
+  			<td><a href="#">delete</a></td>
+  		</tr>
+  		<tr>
+  			<td>term three</td>
+  			<td><a href="#">delete</a></td>
+  		</tr>
+  	</table>
+  </body>
+  </html>
