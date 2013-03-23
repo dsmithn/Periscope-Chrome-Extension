@@ -20,7 +20,6 @@ console.log("ps.js loaded");
 var count = 0;
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse) {
-    console.log(request);
     if (request.type == "search") {
       searchFor(request.term);
     }
@@ -78,8 +77,11 @@ function highlightWord(node,word) {
   }
 }
 
-chrome.storage.local.get('term', function(items) {
-  searchFor(items.term);
+chrome.storage.local.get('terms', function(store) {
+  searchFor(store.terms[0]);
+  for(var i = 0; i < store.terms.length; i++) {
+    searchFor(store.terms[i]);
+  }
 });
 
 
