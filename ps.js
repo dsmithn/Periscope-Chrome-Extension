@@ -1,18 +1,7 @@
-function saveSearch() {
-    var search = {};
-    search.val = $('#search').value;
-    search.site = $('#site').value;
-    saveTabData(tab, search);
-}
-
-function saveTabData(data) {
-    localStorage = data; // OK to store data
-}
-
 function searchFor(searchVal) {
     if (searchVal === "") return;
     count = 0;
-    highlightWord(document.getElementsByTagName("body")[0], searchVal);
+    highlightWords(document.getElementsByTagName("body")[0], searchVal);
     chrome.extension.sendMessage({
         type: "badge",
         text: count.toString()
@@ -22,11 +11,13 @@ function searchFor(searchVal) {
 }
 
 var count = 0;
-chrome.extension.onMessage.addListener(
-
-function(request, sender, sendResponse) {
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "search") {
-        searchFor([request.term]);
+        searchFor(getTerms([request.term]));
+    } else if (request.type = "searchAll") {
+        chrome.storage.local.get('terms', function(store) {
+            searchFor(getTerms(store.terms));
+        });
     }
 });
 
@@ -37,12 +28,12 @@ function(request, sender, sendResponse) {
 
 /* This script is by Stuart Langridge licensed under MIT license http://www.kryogenix.org/code/browser/licence.html */
 
-function highlightWord(node, words) {
+function highlightWords(node, words) {
     // Iterate into this nodes childNodes
     if (node.hasChildNodes) {
         var hi_cn;
         for (hi_cn = 0; hi_cn < node.childNodes.length; hi_cn++) {
-            highlightWord(node.childNodes[hi_cn], words);
+            highlightWords(node.childNodes[hi_cn], words);
         }
     }
 
@@ -50,6 +41,7 @@ function highlightWord(node, words) {
     if (node.nodeType == 3) { // text node
         tempNodeVal = node.nodeValue.toLowerCase();
         for (var i = 0; i < words.length; i++) {
+
             tempWordVal = words[i].toLowerCase();
             if (tempNodeVal.indexOf(tempWordVal) != -1) {
                 pn = node.parentNode;
@@ -87,5 +79,13 @@ function highlightWord(node, words) {
 }
 
 chrome.storage.local.get('terms', function(store) {
-    searchFor(store.terms);
+    searchFor(getTerms(store.terms));
 });
+
+function getTerms(terms) {
+    var words = [];
+    for (var i = 0; i < terms.length; i++) {
+        if (terms[i].website === "*" || window.location.href.lastIndexOf(terms[i].website) !== -1) words.push(terms[i].term);
+    }
+    return words;
+}

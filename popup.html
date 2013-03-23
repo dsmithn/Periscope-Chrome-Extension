@@ -1,30 +1,39 @@
 <!doctype html>
 <html>
-<head>
-	<title>Getting Started Extension's Popup</title>
-	<style>
-	body {
-		min-width: 357px;
-		overflow-x: hidden;
-	}
-	</style>
+    
+    <head>
+        <title>
+            Getting Started Extension's Popup
+        </title>
+        <style>
+            body { min-width: 357px; overflow-x: hidden; }
+        </style>
+        <!-- - JavaScript and HTML must be in separate files: see our Content
+        Security - Policy documentation[1] for details and explanation. - - [1]:
+        http://developer.chrome.com/extensions/contentSecurityPolicy.html -->
+        <script src="ps_background.js">
+        </script>
+    </head>
+    
+    <body>
+        <h2>
+            Periscope Chrome Extension
+        </h2>
+        <label for="search">
+            Search Term
+        </label>
+        <input type="text" id="search" name="search" />
+        <br />
+        <label for="search">
+            Website Match
+        </label>
+        <input type="text" id="websites" name="websites" value="*" />
+        <br />
+        <br />
+        <input type="button" value="Save" id="saveSearch" />
+        <ul id="termsList">
+        </ul>
+        <span id="clearAll"><a href="#">Clear All</a></span>
+    </body>
 
-    <!--
-      - JavaScript and HTML must be in separate files: see our Content Security
-      - Policy documentation[1] for details and explanation.
-      -
-      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
-    -->
-    <script src="ps_background.js"></script>
-  </head>
-  <body>
-  	<h2>Periscope Chrome Extension</h2>
-  	<label for="search">Search Term</label>
-  	<input type="text" id="search" name="search" />
-  	<br />
-  	<br />
-  	<input type="button" value="Save" id="saveSearch"/>
-  	<ul id="termsList">
-    </ul>
-  </body>
-  </html>
+</html>
