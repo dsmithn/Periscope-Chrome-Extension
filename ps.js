@@ -70,9 +70,8 @@ function highlightWords(node, words) {
                     pn.insertBefore(hiword, node);
                     pn.insertBefore(after, node);
                     pn.removeChild(node);
-                    count++;
                 }
-
+                count++;
             }
         }
     }
