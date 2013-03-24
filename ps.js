@@ -36,13 +36,14 @@ function highlightWords(node, words) {
             highlightWords(node.childNodes[hi_cn], words);
         }
     }
-
+    var word, color;
     // And do this node itself
     if (node.nodeType == 3) { // text node
         tempNodeVal = node.nodeValue.toLowerCase();
         for (var i = 0; i < words.length; i++) {
-
-            tempWordVal = words[i].toLowerCase();
+            word = words[i].term;
+            color = (words[i].color === "#FFFF00") ? false : words[i].color;
+            tempWordVal = word.toLowerCase();
             if (tempNodeVal.indexOf(tempWordVal) != -1) {
                 pn = node.parentNode;
                 // check if we're inside a "nosearchhi" zone
@@ -60,11 +61,12 @@ function highlightWords(node, words) {
                     ni = tempNodeVal.indexOf(tempWordVal);
                     // Create a load of replacement nodes
                     before = document.createTextNode(nv.substr(0, ni));
-                    docWordVal = nv.substr(ni, words[i].length);
-                    after = document.createTextNode(nv.substr(ni + words[i].length));
+                    docWordVal = nv.substr(ni, word.length);
+                    after = document.createTextNode(nv.substr(ni + word.length));
                     hiwordtext = document.createTextNode(docWordVal);
                     hiword = document.createElement("mark");
                     hiword.className = "searchword";
+                    if(color) hiword.setAttribute('style', 'background-color: ' + color + ';');
                     hiword.appendChild(hiwordtext);
                     pn.insertBefore(before, node);
                     pn.insertBefore(hiword, node);
@@ -84,7 +86,7 @@ chrome.storage.local.get('terms', function(store) {
 function getTerms(terms) {
     var words = [];
     for (var i = 0; i < terms.length; i++) {
-        if (terms[i].website === "*" || window.location.href.lastIndexOf(terms[i].website) !== -1) words.push(terms[i].term);
+        if (terms[i].website === "*" || window.location.href.lastIndexOf(terms[i].website) !== -1) words.push(terms[i]);
     }
     return words;
 }

@@ -11,8 +11,8 @@
         <!-- - JavaScript and HTML must be in separate files: see our Content
         Security - Policy documentation[1] for details and explanation. - - [1]:
         http://developer.chrome.com/extensions/contentSecurityPolicy.html -->
-        <script src="ps_background.js">
-        </script>
+        <script type="text/javascript" src="ps_background.js"></script>
+        <script type="text/javascript" src="jscolor.js"></script>
     </head>
     
     <body>
@@ -28,6 +28,10 @@
             Website Match
         </label>
         <input type="text" id="websites" name="websites" value="*" />
+        <br />
+        <small>
+            Hightlight: <a href="#" id="hightlightColor">default</a><input id="colorPicker" style="display:none;" class="color" value="#FFFF00">
+        </small>
         <br />
         <br />
         <input type="button" value="Save" id="saveSearch" />

@@ -1,3 +1,5 @@
 Periscope Extension for Google Chrome
 
+This extenstion is essentially a replacement for the built in Find function in Chrome. It offers two unique features, however. Your searches remain saved on the browser and will be applied on every page that is loaded until you delete the search term. In addition, you can appyl a filter on the search term to only be applied when the website's URL matches the Website Match field.
+
 Created by Devin Donohue and Destin Smith-Norris

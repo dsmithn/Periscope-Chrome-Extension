@@ -4,7 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     saveSearch.addEventListener("click", addSearchTerm);
     clearAll.addEventListener("click", function() {
         storage.clear();
-        addListTerm("termsList", [])
+        addListTerm("termsList", []);
+    });
+    hightlightColor.addEventListener("click", function() {
+        hightlightColor.setAttribute('style', 'display:none;');
+        colorPicker.setAttribute('style', 'display:inline;');
     });
     storage.get('terms', function(store) {
         addListItem("termsList", store.terms);
@@ -29,6 +33,7 @@ chrome.tabs.onActivated.addListener(function(tab) {
 function addSearchTerm() {
     var searchVal = search.value;
     var webVal = websites.value;
+    var color = colorPicker.value;
     if (webVal === "") webVal = "*";
     if (searchVal !== "") {
         chrome.tabs.getSelected(null, function(tab) {
@@ -36,7 +41,8 @@ function addSearchTerm() {
                 type: "search",
                 term: {
                     term: searchVal,
-                    website: webVal
+                    website: webVal,
+                    color: color
                 },
             }, function(response) {});
         });
@@ -45,7 +51,8 @@ function addSearchTerm() {
             if (terms === undefined) terms = [];
             terms.push({
                 term: searchVal,
-                website: webVal
+                website: webVal,
+                color: color
             });
             storage.set({
                 'terms': terms
@@ -53,11 +60,15 @@ function addSearchTerm() {
                 addListItem("termsList", store.terms);
             });
         });
+        searchVal.value = "";
+        hightlightColor.setAttribute('style', 'display:inline;');
+        colorPicker.setAttribute('style', 'display:none;');
+        colorPicker.value = "FFFF00";
     }
 }
 
 function addListItem(listID, terms) {
-    var element, new_element;
+    var element, new_element, liHTML;
     var container = document.getElementById(listID);
     container.innerHTML = "";
     for (var i = 0; i < terms.length; i++) {
@@ -65,7 +76,8 @@ function addListItem(listID, terms) {
         new_element = document.createElement('li');
         new_element.innerHTML = element;
         container.insertBefore(new_element, container.firstChild);
-        new_element.innerHTML = terms[i].term + "@" + terms[i].website + "(<span id='deleteTerm_" + i + "' termindex=" + i + " ><a href='#'>delete</a></span>)";
+        //liHTML = 
+        new_element.innerHTML = "<span style='background-color:#" + terms[i].color + ";'>" + terms[i].term + "</span>@" + terms[i].website + " (<span id='deleteTerm_" + i + "' termindex=" + i + " ><a href='#'>delete</a></span>)";
         document.getElementById("deleteTerm_" + i).addEventListener("click", deleteTerm);
     }
 
