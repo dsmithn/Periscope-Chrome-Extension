@@ -25,7 +25,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.tabs.onActivated.addListener(function(tab) {
     chrome.tabs.getSelected(null, function(tab) {
         chrome.tabs.sendMessage(tab.id, {
-            type: "searchAll",
+            type: "searchAll"
         }, function(response) {});
     });
 });
@@ -43,7 +43,7 @@ function addSearchTerm() {
                     term: searchVal,
                     website: webVal,
                     color: color
-                },
+                }
             }, function(response) {});
         });
         storage.get('terms', function(store) {
@@ -77,8 +77,13 @@ function addListItem(listID, terms) {
         new_element.innerHTML = element;
         container.insertBefore(new_element, container.firstChild);
         //liHTML = 
-        new_element.innerHTML = "<span style='background-color:#" + terms[i].color + ";'>" + terms[i].term + "</span>@" + terms[i].website + " (<span id='deleteTerm_" + i + "' termindex=" + i + " ><a href='#'>delete</a></span>)";
+        new_element.innerHTML = "<span style='background-color:#" + terms[i].color + ";'>" + terms[i].term + "</span>@" + terms[i].website;
+        new_element.innerHTML += " (<span id='deleteTerm_" + i + "' termindex=" + i + " ><a href='#'>delete</a></span>)";
+        new_element.innerHTML += " (<span id='findTerm_" + i + "' termindex=" + i + " ><a href='#'>find next</a> /";
+        new_element.innerHTML += " <span id='findTermPrev_" + i + "' termindex=" + i + " ><a href='#'>prev</a>)";
         document.getElementById("deleteTerm_" + i).addEventListener("click", deleteTerm);
+        document.getElementById("findTerm_" + i).addEventListener("click", findTermClick);
+        document.getElementById("findTermPrev_" + i).addEventListener("click", findTermPrevClick);
     }
 
 }
@@ -94,4 +99,25 @@ function deleteTerm(elm) {
             addListItem("termsList", store.terms);
         });
     });
+}
+
+function findTerm(index, prev) {
+    storage.get('terms', function(store) {
+        var term = store.terms[index].term;
+        chrome.tabs.getSelected(null, function(tab) {
+            chrome.tabs.sendMessage(tab.id, {
+                type: "findTerm",
+                term: term,
+                prev: prev
+            }, function(response) {});
+        });
+    });
+}
+
+function findTermClick(elm) {
+    findTerm(this.getAttribute('termIndex'), false);
+}
+
+function findTermPrevClick(elm) {
+    findTerm(this.getAttribute('termIndex'), true);
 }

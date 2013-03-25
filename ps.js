@@ -6,7 +6,7 @@ function searchFor(searchVal) {
         type: "badge",
         text: count.toString()
     }, function(response) {
-        console.log("sent")
+        console.log("sent");
     });
 }
 
@@ -14,10 +14,13 @@ var count = 0;
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "search") {
         searchFor(getTerms([request.term]));
-    } else if (request.type = "searchAll") {
+    } else if (request.type == "searchAll") {
         chrome.storage.local.get('terms', function(store) {
             searchFor(getTerms(store.terms));
         });
+    } else if(request.type == "findTerm") {
+        var res = window.find(request.term, false, request.prev, true);
+        console.log("finding", request.term, res);
     }
 });
 
@@ -78,7 +81,25 @@ function highlightWords(node, words) {
         }
     }
 }
+/*
+JQuery - http://stackoverflow.com/questions/6450336/regex-for-visible-text-not-html
+$.fn.highlight = function(word) {
+    var pattern = new RegExp(word, 'g'),
+        repl = '<span class="high">' + word + '</span>';
 
+    this.each(function() {
+        $(this).contents().each(function() {
+            if(this.nodeType === 3 && pattern.test(this.nodeValue)) {
+                $(this).replaceWith(this.nodeValue.replace(pattern, repl));
+            }
+            else if(!$(this).hasClass('high')) {
+                $(this).highlight(word);
+            }
+        });
+    });
+    return this;
+};
+*/
 chrome.storage.local.get('terms', function(store) {
     searchFor(getTerms(store.terms));
 });
